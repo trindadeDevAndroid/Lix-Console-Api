@@ -2,8 +2,9 @@ var express = require('express')
 var app = express()
 
 const fs = require('fs').promises;
-const USERS_FILE_PATH = 'users.json';
-const APPS_FILE_PATH = 'apps.json';
+const USERS_FILE_PATH = 'users.json'
+const APPS_FILE_PATH = 'apps.json'
+const UPDATES_FILE_PATH = 'updates.json'
 
 app.use(express.urlencoded({ extended: true}))
 app.use(express.json());
@@ -19,6 +20,7 @@ let users = [];
 let apps = [];
 loadUsersFromFile()
 loadAppsFromFile()
+loadUpdatesFromFile()
 
 async function loadUsersFromFile() {
   try {
@@ -40,6 +42,15 @@ async function loadAppsFromFile() {
    }
 }
 
+async function loadUpdatesFromFile() {
+  try {
+   const data = await fs.readFile(UPDATES_FILE_PATH);
+   updates = JSON.parse(data)
+   console.log('Atualizaçoes carregadas do arquivo')
+  } catch (error) {
+    console.error('Erro ao carregar Atualizaçoes do arquivo\n', error)
+   }
+}
 
 async function saveUsersToFile() {
   try {
@@ -58,6 +69,16 @@ async function saveAppsToFile() {
      console.error('Erro ao salvar apps no arquivo: ', error)
    }
 }
+
+async function saveUpdatesToFile() {
+  try {
+    await fs.writeFile(UPDATES_FILE_PATH, JSON.stringify(updates, null, 2));
+    console.log('Atualizaçoes salvos no arquivo.');
+  } catch (error) {
+    console.error('Erro ao salvar Atualizaçoes no arquivo:', error);
+  }
+}
+
 
 app.post('/newuser', async (req, res) => {
   const newUser = req.body;
@@ -90,6 +111,21 @@ app.post('/newapp', async (req, res) => {
   res.status(201).json(newApp);
 });
 
+app.post('/newupdate', async (req, res) => {
+  const newUpdate = req.body;
+  const updateID = newUpdate.uid; // 
+  updates.Updates = updates.Updates || {};
+  updates.Updates[updUid] = {
+    updNews: newUpdate.updNews,
+    updOnwer: newUpdate.updOnwer,
+    updPkg: newUpdate.updPkg,
+    updUid: newUpdate.updUid
+  };
+  await saveUpdatesToFile();
+  res.status(201).json(newUpdate);
+});
+
+
 app.get('/user/:uid', (req, res) =>{
   const userId = req.params.uid;
   const user = users.PiotAccounts[userId];
@@ -113,10 +149,6 @@ app.get('/app/:uid', (req, res) =>{
 
 
 app.get('/', function (req, res){
-  var data = {
-    "message": "Hello World"
-  }
-  res.send(data)
 })
 
 app.get('/users', function (req, res){
