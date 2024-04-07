@@ -159,6 +159,10 @@ app.get('/apps', function (req, res){
   res.json(apps)
 })
 
+app.get('/updates', function (req, res){
+  res.json(updates)
+})
+
 app.delete('/user/:uid', (req, res) =>{
   const userId = req.params.uid;
   delete users.PiotAccounts[userId];
