@@ -27,6 +27,7 @@ async function loadUsersFromFile() {
     const data = await fs.readFile(USERS_FILE_PATH);
     users = JSON.parse(data); 
     console.log('Usuários carregados do arquivo.');
+    console.log(users)
   } catch (error) {
     console.error('Erro ao carregar usuários do arquivo:', error);
   }
@@ -37,6 +38,7 @@ async function loadAppsFromFile() {
    const data = await fs.readFile(APPS_FILE_PATH);
    apps = JSON.parse(data)
    console.log('Aplicativos carregados no do arquivo')
+   console.log(apps)
   } catch (error) {
     console.error('Erro ao carregar apps do arquivo\n', error)
    }
@@ -47,6 +49,7 @@ async function loadUpdatesFromFile() {
    const data = await fs.readFile(UPDATES_FILE_PATH);
    updates = JSON.parse(data)
    console.log('Atualizaçoes carregadas do arquivo')
+   console.log(updates)
   } catch (error) {
     console.error('Erro ao carregar Atualizaçoes do arquivo\n', error)
    }
@@ -56,6 +59,7 @@ async function saveUsersToFile() {
   try {
     await fs.writeFile(USERS_FILE_PATH, JSON.stringify(users, null, 2));
     console.log('Usuários salvos no arquivo.');
+    console.log(users)
   } catch (error) {
     console.error('Erro ao salvar usuários no arquivo:', error);
   }
@@ -65,6 +69,7 @@ async function saveAppsToFile() {
    try{
      await fs.writeFile(APPS_FILE_PATH, JSON.stringify(apps, null, 2))
      console.log('Aplicativos  salvos no arquivo.')
+     console.log(apps)
      } catch (error) {
      console.error('Erro ao salvar apps no arquivo: ', error)
    }
@@ -74,6 +79,7 @@ async function saveUpdatesToFile() {
   try {
     await fs.writeFile(UPDATES_FILE_PATH, JSON.stringify(updates, null, 2));
     console.log('Atualizaçoes salvos no arquivo.');
+    console.log(updates)
   } catch (error) {
     console.error('Erro ao salvar Atualizaçoes no arquivo:', error);
   }
@@ -94,6 +100,7 @@ app.post('/newuser', async (req, res) => {
   };
   await saveUsersToFile();
   res.status(201).json(newUser);
+  console.log("New" + newuser)
 });
 
 app.post('/newapp', async (req, res) => {
@@ -109,6 +116,7 @@ app.post('/newapp', async (req, res) => {
   };
   await saveAppsToFile();
   res.status(201).json(newApp);
+  console.log("New" + newApp)
 });
 
 app.post('/newupdate', async (req, res) => {
@@ -123,6 +131,7 @@ app.post('/newupdate', async (req, res) => {
   };
   await saveUpdatesToFile();
   res.status(201).json(newUpdate);
+  console.log("New" + newUpdate)
 });
 
 
